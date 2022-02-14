@@ -1,0 +1,7 @@
+# ninja log v5
+15	5341	666506218	CMakeFiles/native-lib.dir/src/main/cpp/cJSON.c.o	646bb199502db9eb
+12	5432	666506218	CMakeFiles/native-lib.dir/src/main/cpp/parson.c.o	f4c9d101680002cb
+2	5574	666506218	CMakeFiles/native-lib.dir/src/main/cpp/JniUtils.cpp.o	932aa2b40704e2fb
+2085	3094	666521377	../../../../build/intermediates/cmake/debug/obj/armeabi-v7a/libnative-lib.so	184a44d80adbbd96
+3	2085	666521376	CMakeFiles/native-lib.dir/src/main/cpp/web_task.cpp.o	95ed3560a8c3d1b8
+4	1340	666521295	CMakeFiles/native-lib.dir/src/main/cpp/native-lib.cpp.o	111265ff8fc0dc6f

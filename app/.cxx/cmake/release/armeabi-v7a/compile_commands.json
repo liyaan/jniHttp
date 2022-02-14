@@ -1,0 +1,31 @@
+[
+{
+  "directory": "D:/c++/JniHttp-master/app/.cxx/cmake/release/armeabi-v7a",
+  "command": "D:\\Sdk\\ndk\\21.0.6113669\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\clang++.exe --target=armv7-none-linux-androideabi16 --gcc-toolchain=D:/Sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=D:/Sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/windows-x86_64/sysroot  -Dnative_lib_EXPORTS -I../../../../src/main/cpp/include/curl  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -march=armv7-a -mthumb -Wformat -Werror=format-security   -stdlib=libc++ -std=c++11 -fPIC -w -Oz -DNDEBUG  -fPIC   -o CMakeFiles\\native-lib.dir\\src\\main\\cpp\\native-lib.cpp.o -c D:\\c++\\JniHttp-master\\app\\src\\main\\cpp\\native-lib.cpp",
+  "file": "D:/c++/JniHttp-master/app/src/main/cpp/native-lib.cpp"
+},
+
+{
+  "directory": "D:/c++/JniHttp-master/app/.cxx/cmake/release/armeabi-v7a",
+  "command": "D:\\Sdk\\ndk\\21.0.6113669\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\clang++.exe --target=armv7-none-linux-androideabi16 --gcc-toolchain=D:/Sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=D:/Sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/windows-x86_64/sysroot  -Dnative_lib_EXPORTS -I../../../../src/main/cpp/include/curl  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -march=armv7-a -mthumb -Wformat -Werror=format-security   -stdlib=libc++ -std=c++11 -fPIC -w -Oz -DNDEBUG  -fPIC   -o CMakeFiles\\native-lib.dir\\src\\main\\cpp\\JniUtils.cpp.o -c D:\\c++\\JniHttp-master\\app\\src\\main\\cpp\\JniUtils.cpp",
+  "file": "D:/c++/JniHttp-master/app/src/main/cpp/JniUtils.cpp"
+},
+
+{
+  "directory": "D:/c++/JniHttp-master/app/.cxx/cmake/release/armeabi-v7a",
+  "command": "D:\\Sdk\\ndk\\21.0.6113669\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\clang++.exe --target=armv7-none-linux-androideabi16 --gcc-toolchain=D:/Sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=D:/Sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/windows-x86_64/sysroot  -Dnative_lib_EXPORTS -I../../../../src/main/cpp/include/curl  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -march=armv7-a -mthumb -Wformat -Werror=format-security   -stdlib=libc++ -std=c++11 -fPIC -w -Oz -DNDEBUG  -fPIC   -o CMakeFiles\\native-lib.dir\\src\\main\\cpp\\web_task.cpp.o -c D:\\c++\\JniHttp-master\\app\\src\\main\\cpp\\web_task.cpp",
+  "file": "D:/c++/JniHttp-master/app/src/main/cpp/web_task.cpp"
+},
+
+{
+  "directory": "D:/c++/JniHttp-master/app/.cxx/cmake/release/armeabi-v7a",
+  "command": "D:\\Sdk\\ndk\\21.0.6113669\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\clang.exe --target=armv7-none-linux-androideabi16 --gcc-toolchain=D:/Sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=D:/Sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/windows-x86_64/sysroot -Dnative_lib_EXPORTS -I../../../../src/main/cpp/include/curl  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -march=armv7-a -mthumb -Wformat -Werror=format-security  -Oz -DNDEBUG  -fPIC   -o CMakeFiles\\native-lib.dir\\src\\main\\cpp\\cJSON.c.o   -c D:\\c++\\JniHttp-master\\app\\src\\main\\cpp\\cJSON.c",
+  "file": "D:/c++/JniHttp-master/app/src/main/cpp/cJSON.c"
+},
+
+{
+  "directory": "D:/c++/JniHttp-master/app/.cxx/cmake/release/armeabi-v7a",
+  "command": "D:\\Sdk\\ndk\\21.0.6113669\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\clang.exe --target=armv7-none-linux-androideabi16 --gcc-toolchain=D:/Sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=D:/Sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/windows-x86_64/sysroot -Dnative_lib_EXPORTS -I../../../../src/main/cpp/include/curl  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -march=armv7-a -mthumb -Wformat -Werror=format-security  -Oz -DNDEBUG  -fPIC   -o CMakeFiles\\native-lib.dir\\src\\main\\cpp\\parson.c.o   -c D:\\c++\\JniHttp-master\\app\\src\\main\\cpp\\parson.c",
+  "file": "D:/c++/JniHttp-master/app/src/main/cpp/parson.c"
+}
+]
