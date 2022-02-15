@@ -298,27 +298,39 @@ void WebTask::postJsonRequest(std::string strJson) {
     curl_easy_setopt(m_curl, CURLOPT_POSTFIELDS, strJson.c_str());
     curl_easy_setopt(m_curl, CURLOPT_POSTFIELDSIZE, strJson.size());
 }
-
+bool WebTask::addHeaderFrom(std::string headerString) {
+    headers = curl_slist_append(headers, "Content-Type:application/x-www-form-urlencoded");
+    headers = curl_slist_append(headers, "charset:utf-8");
+    std::stringstream ss(headerString);
+    std::string tmp;
+    while (getline(ss, tmp, ',')){
+        headers = curl_slist_append(headers,tmp.c_str());
+        LOGI("SUCCESS HEADER %d",tmp.c_str());
+    }
+    int nRet = curl_easy_setopt(m_curl, CURLOPT_HTTPHEADER, headers);
+    if (nRet == CURLE_OK){
+        LOGI("SUCCESS HEADER %d",nRet);
+    }else{
+        LOGI("ERROR %d",nRet);
+    }
+}
 bool WebTask::addHeader(std::string headerString) {
 	headers = curl_slist_append(headers, "Content-Type:application/json");
 	headers = curl_slist_append(headers, "charset:utf-8");
     headers = curl_slist_append(headers, "Accept: */*");
     std::stringstream ss(headerString);
-	std::string tmp;
-	while (getline(ss, tmp, ',')){
-		headers = curl_slist_append(headers,tmp.c_str());
+    std::string tmp;
+    while (getline(ss, tmp, ',')){
+        headers = curl_slist_append(headers,tmp.c_str());
         LOGI("SUCCESS HEADER %d",tmp.c_str());
-	}
-	int nRet = curl_easy_setopt(m_curl, CURLOPT_HTTPHEADER, headers);
-	if (nRet == CURLE_OK){
-		LOGI("SUCCESS HEADER %d",nRet);
-	}else{
-		LOGI("ERROR %d",nRet);
-	}
+    }
+    int nRet = curl_easy_setopt(m_curl, CURLOPT_HTTPHEADER, headers);
+    if (nRet == CURLE_OK){
+        LOGI("SUCCESS HEADER %d",nRet);
+    }else{
+        LOGI("ERROR %d",nRet);
+    }
     return true;
-}
-void WebTask::addPostData(std::string requestJson) {
-
 }
 
 

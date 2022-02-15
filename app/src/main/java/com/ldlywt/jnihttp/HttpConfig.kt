@@ -3,7 +3,7 @@ package com.ldlywt.jnihttp
 import android.util.Log
 
 object HttpConfig {
-    private var httpConnection:HttpConnectionImpl? = null
+    private var httpConnection:HttpConnectionImpl = HttpRequest()
     private var mUrl:String? = null
     private var mHeader:String? = null
     private var mJson:String? = null
@@ -19,7 +19,7 @@ object HttpConfig {
 
     fun get(method: (String) -> Unit){
         mUrl?.let {
-            method(httpConnection?.get(it)?:"")
+            method(httpConnection.get(it))
         }?:let {
             Log.i("httpConnection","url not null")
         }
@@ -35,11 +35,11 @@ object HttpConfig {
     fun post(method: (String) -> Unit){
         mUrl?.let { url->
             mJson?.let {
-                method(httpConnection?.postJson(url, it)?:"")
+                method(httpConnection.postJson(url, it))
             }
             mList?.let {
                 if (it.size>0)
-                    method(httpConnection?.postFromData(url, it)?:"")
+                    method(httpConnection.postFromData(url, it))
                 else
                     Log.i("httpConnection","url list not null")
             }

@@ -189,7 +189,7 @@ Java_com_ldlywt_jnihttp_HttpConnections_httpPostFromData(JNIEnv *env, jobject th
     string url_ = env->GetStringUTFChars(url,0);
     string header_ = env->GetStringUTFChars(header,0);
     WebTask task;
-    task.addHeader(header_);
+    task.addHeaderFrom(header_);
     const char* json_ = env->GetStringUTFChars(json,0);
     JSON_Value *root_value = json_parse_string(json_);
     JSON_Value_Type jsonValueType = json_value_get_type(root_value);

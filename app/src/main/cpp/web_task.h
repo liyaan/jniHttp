@@ -57,6 +57,7 @@ class WebTask
 	// if call DoGetString or DoGetFile
 	bool   m_do_func_called;
     bool addHeader(std::string headerString);
+    bool addHeaderFrom(std::string headerString);
     void postJsonRequest(std::string strJson);
     void addPostData(std::string requestJson);
 	//for post
