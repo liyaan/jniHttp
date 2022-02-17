@@ -1,9 +1,15 @@
 package com.ldlywt.jnihttp;
 
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
+
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,19 +24,34 @@ public class MainActivity extends AppCompatActivity {
         // Example of a call to a native method
         TextView tv = (TextView) findViewById(R.id.sample_text);
 //        HttpConfig.INSTANCE.httpConnect(new HttpRequest());
-        HttpConfig.INSTANCE
-                .url("请求的URL")
-                .get(it ->{
-                    Log.i("LIYAAN",it);
-                    return null;
-                });
-        HttpConfig.INSTANCE
-                .postValue("Post请求的json")
-                .url("请求的URL")
-                .post(it->{
-                    Log.i("LIYAAN",it);
-                    return null;
-                });
+//        HttpConfig.INSTANCE
+//                .url("请求的URL")
+//                .get(it ->{
+//                    Log.i("LIYAAN",it);
+//                    return null;
+//                });
+//        HttpConfig.INSTANCE
+//                .postValue("Post请求的json")
+//                .url("请求的URL")
+//                .post(it->{
+//                    Log.i("LIYAAN",it);
+//                    return null;
+//                });
+
+        List<ValueName> list = new ArrayList<>();
+        list.add(new ValueName("phone","18612515189"));
+        list.add(new ValueName("password","123456qwe"));
+        list.add(new ValueName("agency_id","384"));
+        list.add(new ValueName("is_bx","1"));
+        list.add(new ValueName("terminal_key","AiY2JsIAig6UKJgPpb85bup5s9y3uX_4m0ZxCxGRzvcW"));
+        list.add(new ValueName("terminal_type","2"));
+        String json =  new Gson().toJson(list);
+        HttpConnections.INSTANCE.httpPostCookieForm(
+                "post from data 请求接口",
+                json
+                );
+        HttpConnections.INSTANCE
+                .httpGetCookieForm("请求接口");
 
     }
 

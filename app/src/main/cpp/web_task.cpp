@@ -8,6 +8,7 @@
 #include <iostream>
 #include <iomanip>
 #include <vector>
+#include <cstring>
 static int get_filesize(const char* fpath)
 {
    return 1;
@@ -114,7 +115,9 @@ void WebTask::_init()
     curl_easy_setopt(m_curl, CURLOPT_CAINFO, "/tmp/ca.pem");
 //	curl_easy_setopt(m_curl, CURLOPT_HEADER, true);
     curl_easy_setopt(m_curl, CURLOPT_DNS_CACHE_TIMEOUT, 60*60*72);
-
+    //初始化cookie引擎
+    curl_easy_setopt(m_curl,CURLOPT_COOKIEFILE,"");    //初始化cookie引擎,才能正确接收到cookie数据.
+    curl_easy_setopt(m_curl,CURLOPT_FOLLOWLOCATION, 1L);
 }
 
 void WebTask::_add_post_file(const char* item_name, const char* file_path, const char* file_name,  const char* content_type)
@@ -163,33 +166,48 @@ int WebTask::DoGetString()
 
     /* we want the headers be written to this file handle */
 //    curl_easy_setopt(m_curl, CURLOPT_WRITEHEADER, NULL);
-
 	m_web_buf.size = 200*1024;
-	m_web_buf.buf = (char*)malloc(m_web_buf.size);	
+	m_web_buf.buf = (char*)malloc(m_web_buf.size);
 	m_web_buf.datalen = 0;
 	memset(m_web_buf.buf, 0, m_web_buf.size);
-	
+
     /* we want the body be written to this file handle instead of stdout */
     curl_easy_setopt(m_curl, CURLOPT_WRITEDATA, &m_web_buf);
 
 	m_do_func_called = true;
 	return 0;
 }
+int WebTask::WaitCookieTaskDone() {
+    /* get it! */
+    CURLcode res = curl_easy_perform(m_curl);
+
+    res = (CURLcode)_on_work_done((int)res);
+
+    //clean up
+
+    if(m_formpost)
+        curl_formfree(m_formpost);
+    /* free slist */
+    if(m_headerlist)
+        curl_slist_free_all(m_headerlist);
+
+    curl_easy_cleanup(m_curl);
+    return (int)res;
+}
 int WebTask::WaitTaskDone()
 {
-	    /* get it! */ 
+	    /* get it! */
     CURLcode res = curl_easy_perform(m_curl);
 
 	res = (CURLcode)_on_work_done((int)res);
 
 	//clean up
-	
 	if(m_formpost)
 		curl_formfree(m_formpost);
     /* free slist */
 	if(m_headerlist)
 		curl_slist_free_all(m_headerlist);
-		
+
 	curl_easy_cleanup(m_curl);
 	return (int)res;
 }
@@ -299,32 +317,60 @@ void WebTask::postJsonRequest(std::string strJson) {
     curl_easy_setopt(m_curl, CURLOPT_POSTFIELDSIZE, strJson.size());
 }
 bool WebTask::addHeaderFrom(std::string headerString) {
-    headers = curl_slist_append(headers, "Content-Type:application/x-www-form-urlencoded");
-    headers = curl_slist_append(headers, "charset:utf-8");
-    std::stringstream ss(headerString);
-    std::string tmp;
-    while (getline(ss, tmp, ',')){
-        headers = curl_slist_append(headers,tmp.c_str());
-        LOGI("SUCCESS HEADER %d",tmp.c_str());
+    m_headerlist = curl_slist_append(m_headerlist, "Content-Type:application/x-www-form-urlencoded");
+    m_headerlist = curl_slist_append(m_headerlist, "charset:utf-8");
+    if(!headerString.empty()){
+       if (strstr(headerString.c_str(),",")!=NULL){
+           std::stringstream ss(headerString);
+           std::string tmp;
+           while (getline(ss, tmp, ',')){
+               m_headerlist = curl_slist_append(m_headerlist,tmp.c_str());
+               LOGI("SUCCESS HEADER %d",tmp.c_str());
+           }
+       }
     }
-    int nRet = curl_easy_setopt(m_curl, CURLOPT_HTTPHEADER, headers);
+
+    int nRet = curl_easy_setopt(m_curl, CURLOPT_HTTPHEADER, m_headerlist);
     if (nRet == CURLE_OK){
         LOGI("SUCCESS HEADER %d",nRet);
     }else{
         LOGI("ERROR %d",nRet);
     }
 }
-bool WebTask::addHeader(std::string headerString) {
-	headers = curl_slist_append(headers, "Content-Type:application/json");
-	headers = curl_slist_append(headers, "charset:utf-8");
-    headers = curl_slist_append(headers, "Accept: */*");
-    std::stringstream ss(headerString);
-    std::string tmp;
-    while (getline(ss, tmp, ',')){
-        headers = curl_slist_append(headers,tmp.c_str());
-        LOGI("SUCCESS HEADER %d",tmp.c_str());
+bool WebTask::addCookie(std::string app_cookie) {
+    if(!app_cookie.empty()){
+        if (strstr(app_cookie.c_str(),";")!=NULL){
+            std::stringstream ss(app_cookie);
+            std::string tmp;
+            while (getline(ss, tmp, ';')){
+                curl_easy_setopt(m_curl, CURLOPT_COOKIELIST, tmp.c_str());
+                LOGI("SUCCESS HEADER %d",tmp.c_str());
+            }
+        }else{
+            curl_easy_setopt(m_curl, CURLOPT_COOKIELIST, app_cookie.c_str());
+        }
     }
-    int nRet = curl_easy_setopt(m_curl, CURLOPT_HTTPHEADER, headers);
+
+    return true;
+}
+bool WebTask::addHeader(std::string headerString) {
+    m_headerlist = curl_slist_append(m_headerlist, "Content-Type:application/json");
+    m_headerlist = curl_slist_append(m_headerlist, "charset:utf-8");
+    m_headerlist = curl_slist_append(m_headerlist, "Accept: */*");
+    if(!headerString.empty()){
+        if (strstr(headerString.c_str(),",")!=NULL){
+            std::stringstream ss(headerString);
+            std::string tmp;
+            while (getline(ss, tmp, ',')){
+                m_headerlist = curl_slist_append(m_headerlist,tmp.c_str());
+                LOGI("SUCCESS HEADER %d",tmp.c_str());
+            }
+        }else{
+            LOGI("SUCCESS HEADER %s",headerString.c_str());
+            m_headerlist = curl_slist_append(m_headerlist,headerString.c_str());
+        }
+    }
+    int nRet = curl_easy_setopt(m_curl, CURLOPT_HTTPHEADER, m_headerlist);
     if (nRet == CURLE_OK){
         LOGI("SUCCESS HEADER %d",nRet);
     }else{
@@ -332,5 +378,3 @@ bool WebTask::addHeader(std::string headerString) {
     }
     return true;
 }
-
-

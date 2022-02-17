@@ -34,12 +34,13 @@ class WebTask
 
 	// must call DoGetString() or DoGetFile() before start task
 	int  DoGetString();
+
 	// must call DoGetString() or DoGetFile() before start task
 	// range like "0-255"
 	int  DoGetFile(const char* range=NULL);
 	
 	int  WaitTaskDone();
-
+	int WaitCookieTaskDone();
 	const char*  GetResultString();
 	const char*  GetFilePath();
 
@@ -58,6 +59,7 @@ class WebTask
 	bool   m_do_func_called;
     bool addHeader(std::string headerString);
     bool addHeaderFrom(std::string headerString);
+    bool addCookie(std::string app_cookie);
     void postJsonRequest(std::string strJson);
     void addPostData(std::string requestJson);
 	//for post

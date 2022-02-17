@@ -4,8 +4,8 @@ import com.google.gson.Gson
 
 class HttpRequest:HttpConnectionImpl {
     override fun addHeader(): String {
-        return "token:091f6da9-055d-49d3-b187-9adf810b0ab8,version:3.7.8,symbol:2," +
-                "HTTP_TOKEN:261cfe93-3dea-42bd-813d-10b4c011ff61"
+        return "token:6b780e5f-680b-411f-99a4-6604d5c16391,version:3.7.8,symbol:2," +
+                "HTTP_TOKEN:6b780e5f-680b-411f-99a4-6604d5c16391"
     }
 
     override fun get(url: String) :String{

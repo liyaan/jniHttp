@@ -7,7 +7,25 @@
 using namespace std;
 
 #define JNI_UTILS_LIST "java/util/List"
+#define JNI_MMKV "com/ldlywt/jnihttp/SpUtil"
 
+int spUtilsMMKV(JNIEnv *env,string name,string value){
+    jclass clazz = env->FindClass(JNI_MMKV);
+    jmethodID method_init = env->GetMethodID(clazz,"<init>", "()V");
+    jmethodID method_encode = env->GetMethodID(clazz,"encode", "(Ljava/lang/String;Ljava/lang/String;)V");
+    jobject obj = env->NewObject(clazz,method_init);
+    env->CallVoidMethod(obj,method_encode,env->NewStringUTF(name.c_str()),
+            env->NewStringUTF(value.c_str()));
+    LOGI("数据：%s = %s",name.c_str(),value.c_str());
+    return 0;
+}
+jstring spGetValue(JNIEnv *env,string name){
+    jclass clazz = env->FindClass(JNI_MMKV);
+    jmethodID method_init = env->GetMethodID(clazz,"<init>", "()V");
+    jmethodID method_decode = env->GetMethodID(clazz,"decodeString", "(Ljava/lang/String;)Ljava/lang/String;");
+    jobject obj = env->NewObject(clazz,method_init);
+    return (jstring)(env->CallObjectMethod(obj, method_decode, env->NewStringUTF(name.c_str())));
+}
 extern "C"
 jstring
 Java_com_ldlywt_jnihttp_HttpConnections_httpFromJNI(JNIEnv *env, jobject /* this */) {
@@ -219,4 +237,101 @@ Java_com_ldlywt_jnihttp_HttpConnections_httpPostFromData(JNIEnv *env, jobject th
         return env->NewStringUTF("网络连接失败！");
     }
 
+}extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_ldlywt_jnihttp_HttpConnections_httpGetCookieForm(JNIEnv *env, jobject thiz, jstring url) {
+    string url_ = env->GetStringUTFChars(url,0);
+    string app = env->GetStringUTFChars(spGetValue(env,"app_cookie"),0);
+    WebTask task;
+    LOGI("%s",app.c_str());
+    task.addCookie(app);
+    task.SetUrl(url_.c_str());
+    task.SetConnectTimeout(30);
+    task.DoGetString();
+    if (task.WaitTaskDone() == 0) {
+        if (app.empty()){
+            //如果执行成功,
+            struct curl_slist *cookies = NULL;
+            curl_easy_getinfo(task.m_curl,CURLINFO_COOKIELIST,&cookies);       //获得cookie数据
+            string cookie;
+            while (cookies)
+            {
+                if(cookie.empty()){
+                    cookie = cookies->data;
+                }else{
+                    cookie.append(";").append(cookies->data);
+                }
+                LOGI("cookie = %s",cookie.c_str());
+                cookies = cookies->next;
+                if(!cookies){
+                    spUtilsMMKV(env,"app_cookie",cookie);
+                }
+            }
+        }
+        //请求服务器成功
+        string jsonResult = task.GetResultString();
+        LOGI("网络连接成功:%s\n",jsonResult.c_str());
+        //      return env->NewStringUTF("网络连接成功！");
+        return backJson(env,jsonResult.c_str());
+    } else {
+        LOGI("网络连接失败:%d\n",task.WaitTaskDone());
+        return env->NewStringUTF("网络连接失败！");
+    }
+}extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_ldlywt_jnihttp_HttpConnections_httpPostCookieForm(JNIEnv *env, jobject thiz,
+        jstring url,jstring json) {
+    string url_ = env->GetStringUTFChars(url,0);
+    string app = env->GetStringUTFChars(spGetValue(env,"app_cookie"),0);
+    WebTask task;
+    string json_ = env->GetStringUTFChars(json,0);
+    JSON_Value *root_value = json_parse_string(json_.c_str());
+    JSON_Value_Type jsonValueType = json_value_get_type(root_value);
+    if (jsonValueType == JSONObject){
+        LOGI("数据JSONObject：%s",json_.c_str());
+        JSON_Object *commit = json_value_get_object(root_value);
+        string json_name = json_object_get_string(commit,"name");
+        string json_value = json_object_get_string(commit,"value");
+        task.AddPostString(json_name.c_str(),json_value.c_str());
+    }else if (jsonValueType == JSONArray){
+        JSON_Array *commits  = json_value_get_array(root_value);
+        LOGI("数据JSONArray：%s",json_.c_str());
+        for (int i = 0; i < json_array_get_count(commits); i++) {
+            JSON_Object *commit = json_array_get_object(commits,i);
+            LOGI("数据JSONArray%d：%s : %s ",i,json_object_get_string(commit,"name"),json_object_get_string(commit,"value"));
+            string json_name = json_object_get_string(commit,"name");
+            string json_value = json_object_get_string(commit,"value");
+            task.AddPostString(json_name.c_str(),json_value.c_str());
+        }
+    }
+    task.SetUrl(url_.c_str());
+    task.SetConnectTimeout(30);
+    task.DoGetString();
+    if (task.WaitCookieTaskDone() == 0) {
+        if (app.empty()){
+            //如果执行成功,
+            struct curl_slist *cookies = NULL;
+            curl_easy_getinfo(task.m_curl,CURLINFO_COOKIELIST,&cookies);       //获得cookie数据
+            string cookie;
+            while (cookies)
+            {
+                if(cookie.empty()){
+                    cookie = cookies->data;
+                }else{
+                    cookie.append(";").append(cookies->data);
+                }
+                LOGI("cookie = %s",cookie.c_str());
+                cookies = cookies->next;
+                if(!cookies){
+                    spUtilsMMKV(env,"app_cookie",cookie);
+                }
+            }
+        }
+        //请求服务器成功
+        string jsonResult = task.GetResultString();
+        return backJson(env,jsonResult);
+    } else {
+        LOGI("网络连接失败:%d\n",task.WaitTaskDone());
+        return env->NewStringUTF("网络连接失败！");
+    }
 }

@@ -17,4 +17,9 @@ object HttpConnections {
     external fun httpPostFromJson(url:String,json:String,header: String):String
     //post 请求 传from表单
     external fun httpPostFromData(url:String,json:String,header: String):String
+
+    //GET COOKIE
+    external fun httpGetCookieForm(url:String):String
+    //POST COOKIE
+    external fun httpPostCookieForm(url:String,json: String):String
 }
