@@ -39,12 +39,6 @@ public class MainActivity extends AppCompatActivity {
 //                });
 
         List<ValueName> list = new ArrayList<>();
-        list.add(new ValueName("phone","18612515189"));
-        list.add(new ValueName("password","123456qwe"));
-        list.add(new ValueName("agency_id","384"));
-        list.add(new ValueName("is_bx","1"));
-        list.add(new ValueName("terminal_key","AiY2JsIAig6UKJgPpb85bup5s9y3uX_4m0ZxCxGRzvcW"));
-        list.add(new ValueName("terminal_type","2"));
         String json =  new Gson().toJson(list);
         HttpConnections.INSTANCE.httpPostCookieForm(
                 "post from data 请求接口",
